@@ -1,0 +1,42 @@
+﻿@model IEnumerable<CatalogStructure.Models.Catalog>
+
+<h1>Catalogs</h1>
+
+@if (Model?.Any() == true)
+{
+    <ul>
+        @foreach (var catalog in Model)
+        {
+            <li>
+                <a asp-action="Index" asp-route-catalogId="@catalog.Id">@catalog.Name</a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No catalogs found.</p>
+}
+
+<div class="card-body">
+    <a href="@Url.Action("Create")" class="btn btn-primary">Add New</a>
+    <a href="#" id="delete-all-link" class="btn btn-danger">Delete All</a>
+</div>
+<script>
+    document.getElementById("delete-all-link").addEventListener("click", function (event) {
+        event.preventDefault();
+        if (confirm("Are you sure you want to delete all data from the Catalog?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "@Url.Action("DeleteAll")");
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    location.reload();
+                } else {
+                    alert("Failed to delete all data from the Catalog.");
+                }
+            };
+            xhr.send();
+        }
+    });
+</script>
